@@ -1,0 +1,644 @@
+{% extends "base.html" %}
+{% block title %}Open API | 剁手后续记{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{{ url_for('view.user_package') }}" class="list-group-item">所有快递</a>
+                <a href="{{ url_for('view.user_watching') }}" class="list-group-item">正在关注</a>
+                <a href="{{ url_for('view.user_token') }}" class="list-group-item active">Open API</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h2>Open API</h2>
+            <p>
+                Hi, {{ current_user.username }}, Open API 可以为 Workflow 提供查询所关注快递的服务。
+            </p>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Token</h3>
+                    <p>Token 只是身份标识, 并不是唯一的, 这里生成的 Token 保证可用。</p>
+                    <pre class="pre-scrollable">{{ token }}</pre>
+                </div>
+                <div class="col-md-12">
+                    <h3>Document</h3>
+                    <h4>获得 Token</h4>
+                    <pre># POST /api/token
+
++ Request (application/json; charset=utf-8)
+
+        {
+            "username": "hypo",
+            "password": "111111"
+        }
+
++ Response 200 (application/json)
+
+        {
+          "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYzdiNjQ1MzYtYjVkOC00OWMxLWEzYTktY2U2MWNlNjFmNTRhIiwicmFuZG9tIjoiMGEzNzEwN2UifQ.lZU9687-GyGxhPy2KdbasQLrO1zvBvSSiRIcU-NYkD4",
+          "user_id": "c7b64536-b5d8-49c1-a3a9-ce61ce61f54a"
+        }
+
+
+
+</pre>
+                    <h4>获得所有支持的快递公司</h4>
+                    <pre># GET /api/express
+
++ Request
+
+    + Headers
+
+            token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYzdiNjQ1MzYtYjVkOC00OWMxLWEzYTktY2U2MWNlNjFmNTRhIiwicmFuZG9tIjoiNGE5MjdmMWQifQ.E_I04Q5EGuMiifSZVDscWXkxBFTcDCQvmf069j4Gfjs
+
+
+
++ Response 200 (application/json)
+
+        [
+          {
+            "code": "ARAMEX",
+            "name": "Aramex",
+            "tel": "400-631-8388"
+          },
+          {
+            "code": "ANXINDA",
+            "name": "\u5b89\u4fe1\u8fbe",
+            "tel": "021-54224681"
+          },
+          {
+            "code": "AAEWEB",
+            "name": "AAE",
+            "tel": "400-6100-400 021-51008888"
+          },
+          {
+            "code": "ANEEX",
+            "name": "\u5b89\u80fd\u5feb\u9012",
+            "tel": ""
+          },
+          {
+            "code": "ANE",
+            "name": "\u5b89\u80fd",
+            "tel": "40010-40088"
+          },
+          {
+            "code": "ANJELEX",
+            "name": "\u5b89\u6377",
+            "tel": "400-619-7776"
+          },
+          {
+            "code": "BLACKDOG",
+            "name": "\u9ed1\u72d7",
+            "tel": "400-106-1234"
+          },
+          {
+            "code": "BSKY",
+            "name": "\u767e\u4e16\u5feb\u8fd0",
+            "tel": ""
+          },
+          {
+            "code": "EES",
+            "name": "\u767e\u798f\u4e1c\u65b9",
+            "tel": "400-706-0609"
+          },
+          {
+            "code": "FLYWAYEX",
+            "name": "\u7a0b\u5149",
+            "tel": "0064-09-2759536"
+          },
+          {
+            "code": "DEPPON",
+            "name": "\u5fb7\u90a6",
+            "tel": "95353"
+          },
+          {
+            "code": "DEXP",
+            "name": "D\u901f",
+            "tel": "0531-88636363"
+          },
+          {
+            "code": "DPEX",
+            "name": "DPEX",
+            "tel": "0755-88297707"
+          },
+          {
+            "code": "DHL",
+            "name": "DHL",
+            "tel": "800-810-8000 400-810-8000"
+          },
+          {
+            "code": "DTW",
+            "name": "\u5927\u7530",
+            "tel": "400-626-1166"
+          },
+          {
+            "code": "EMS",
+            "name": "EMS",
+            "tel": "40080-11183"
+          },
+          {
+            "code": "EWE",
+            "name": "EWE",
+            "tel": "1300-09-6655"
+          },
+          {
+            "code": "EFSPOST",
+            "name": "\u5e73\u5b89\u5feb\u9012",
+            "tel": "0773-2315320"
+          },
+          {
+            "code": "FEDEXIN",
+            "name": "FedEx\u56fd\u9645",
+            "tel": "800-988-1888 400-886-1888"
+          },
+          {
+            "code": "FEDEX",
+            "name": "FedEx",
+            "tel": "800-988-1888 400-886-1888"
+          },
+          {
+            "code": "FTD",
+            "name": "\u5bcc\u817e\u8fbe",
+            "tel": "0064-09-4432342"
+          },
+          {
+            "code": "PHOENIXEXP",
+            "name": "\u51e4\u51f0",
+            "tel": "010-85826200"
+          },
+          {
+            "code": "ND56",
+            "name": "\u80fd\u8fbe",
+            "tel": "400-6886-765"
+          },
+          {
+            "code": "GSD",
+            "name": "\u5171\u901f\u8fbe",
+            "tel": "400-111-0005"
+          },
+          {
+            "code": "GCE",
+            "name": "\u98de\u6d0b",
+            "tel": "010-87785733"
+          },
+          {
+            "code": "GTO",
+            "name": "\u56fd\u901a",
+            "tel": "4001-111-123"
+          },
+          {
+            "code": "HTKY",
+            "name": "\u767e\u4e16\u5feb\u9012",
+            "tel": "4009565656"
+          },
+          {
+            "code": "HENGLU",
+            "name": "\u6052\u8def",
+            "tel": "400-182-6666"
+          },
+          {
+            "code": "HYE",
+            "name": "\u9e3f\u8fdc",
+            "tel": ""
+          },
+          {
+            "code": "HQKY",
+            "name": "\u534e\u4f01",
+            "tel": "400-626-2356"
+          },
+          {
+            "code": "HREX",
+            "name": "\u9526\u7a0b\u5feb\u9012",
+            "tel": ""
+          },
+          {
+            "code": "KERRY",
+            "name": "\u5609\u91cc\u7269\u6d41",
+            "tel": "852-2410-3600"
+          },
+          {
+            "code": "JIAJI",
+            "name": "\u4f73\u5409",
+            "tel": "400-820-5566"
+          },
+          {
+            "code": "JD",
+            "name": "\u4eac\u4e1c",
+            "tel": ""
+          },
+          {
+            "code": "PEWKEE",
+            "name": "\u664b\u8d8a",
+            "tel": "\u53f0\u5317\uff1a+886-2-25016988\u6fb3\u95e8\uff1a00853-28520722\u798f\u5efa\uff1a0592-5569715\u5e7f\u4e1c\uff1a0769-88763939"
+          },
+          {
+            "code": "JOUST",
+            "name": "\u6025\u5148\u8fbe",
+            "tel": "400-694-1256"
+          },
+          {
+            "code": "TMS",
+            "name": "\u52a0\u8fd0\u7f8e",
+            "tel": "0769-85515555 "
+          },
+          {
+            "code": "JIAYI",
+            "name": "\u4f73\u6021",
+            "tel": "400-631-9999"
+          },
+          {
+            "code": "KKE",
+            "name": "\u4eac\u5e7f",
+            "tel": "852-23329918"
+          },
+          {
+            "code": "KYEXPRESS",
+            "name": "\u8de8\u8d8a",
+            "tel": "4008-098-098"
+          },
+          {
+            "code": "FASTEXPRESS",
+            "name": "\u5feb\u6377",
+            "tel": "4008-333-666"
+          },
+          {
+            "code": "LBEX",
+            "name": "\u9f99\u90a6",
+            "tel": "021-59218889"
+          },
+          {
+            "code": "LTS",
+            "name": "\u8054\u660a\u901a",
+            "tel": "400-888-8887"
+          },
+          {
+            "code": "CAE",
+            "name": "\u6c11\u822a",
+            "tel": "4008-17-4008"
+          },
+          {
+            "code": "PCA",
+            "name": "PCA",
+            "tel": "1800518000"
+          },
+          {
+            "code": "PEISI",
+            "name": "\u914d\u601d\u822a\u5b87",
+            "tel": "010-65489928"
+          },
+          {
+            "code": "QFKD",
+            "name": "\u5168\u5cf0",
+            "tel": "4001-000-001"
+          },
+          {
+            "code": "APEX",
+            "name": "\u5168\u4e00",
+            "tel": "400-663-1111"
+          },
+          {
+            "code": "QCKD",
+            "name": "\u5168\u6668",
+            "tel": "0769-82026703"
+          },
+          {
+            "code": "RFD",
+            "name": "\u5982\u98ce\u8fbe",
+            "tel": "400-010-6660"
+          },
+          {
+            "code": "SFEXPRESS",
+            "name": "\u987a\u4e30",
+            "tel": "95338"
+          },
+          {
+            "code": "STO",
+            "name": "\u7533\u901a",
+            "tel": "95543"
+          },
+          {
+            "code": "SHENGHUI",
+            "name": "\u76db\u8f89",
+            "tel": "400-822-2222"
+          },
+          {
+            "code": "SFC",
+            "name": "\u4e09\u6001",
+            "tel": "400-881-8106"
+          },
+          {
+            "code": "SDEX",
+            "name": "\u987a\u8fbe\u5feb\u9012",
+            "tel": ""
+          },
+          {
+            "code": "SFWL",
+            "name": "\u76db\u4e30",
+            "tel": "4008-556688"
+          },
+          {
+            "code": "SURE",
+            "name": "\u901f\u5c14",
+            "tel": "400-158-9888"
+          },
+          {
+            "code": "SUNING",
+            "name": "\u82cf\u5b81",
+            "tel": "95315"
+          },
+          {
+            "code": "TTKDEX",
+            "name": "\u5929\u5929",
+            "tel": "4001-888-888"
+          },
+          {
+            "code": "TNT",
+            "name": "TNT",
+            "tel": "800-820-9868"
+          },
+          {
+            "code": "HOAU",
+            "name": "\u5929\u5730\u534e\u5b87",
+            "tel": "400-808-6666"
+          },
+          {
+            "code": "UPS",
+            "name": "UPS",
+            "tel": "800-820-8388 400-820-8388"
+          },
+          {
+            "code": "VANGEN",
+            "name": "\u4e07\u5e9a",
+            "tel": ""
+          },
+          {
+            "code": "WANJIA",
+            "name": "\u4e07\u5bb6\u7269\u6d41",
+            "tel": "4001-156-561"
+          },
+          {
+            "code": "GZWENJIE",
+            "name": "\u6587\u6377\u822a\u7a7a",
+            "tel": "020-36680069"
+          },
+          {
+            "code": "EWINSHINE",
+            "name": "\u4e07\u8c61",
+            "tel": "400-820-8088"
+          },
+          {
+            "code": "XBWL",
+            "name": "\u65b0\u90a6",
+            "tel": "4008-000-222"
+          },
+          {
+            "code": "XFEXPRESS",
+            "name": "\u4fe1\u4e30",
+            "tel": "4008-306-333"
+          },
+          {
+            "code": "YTO",
+            "name": "\u5706\u901a",
+            "tel": "021-69777888 021-69777999"
+          },
+          {
+            "code": "YUNDA",
+            "name": "\u97f5\u8fbe",
+            "tel": "95546"
+          },
+          {
+            "code": "CHINAPOST",
+            "name": "\u90ae\u653f\u5305\u88f9",
+            "tel": "11185"
+          },
+          {
+            "code": "QEXPRESS",
+            "name": "\u6613\u8fbe\u901a",
+            "tel": "0064-09-8388681"
+          },
+          {
+            "code": "UC56",
+            "name": "\u4f18\u901f",
+            "tel": "400-1111-119"
+          },
+          {
+            "code": "BROADASIA",
+            "name": "\u4e9a\u98ce",
+            "tel": "4001-000-002"
+          },
+          {
+            "code": "YCGWL",
+            "name": "\u8fdc\u6210",
+            "tel": "400-820-1646"
+          },
+
+
+[Generated code truncated to 10k characters, "Export" or "Open With" to get all code.]</pre>
+                    <h4>根据单号获得快递信息</h4>
+                    <pre># GET /api/express/SFEXPRESS/289031214972
+
++ Request
+
+    + Headers
+
+            token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYzdiNjQ1MzYtYjVkOC00OWMxLWEzYTktY2U2MWNlNjFmNTRhIiwicmFuZG9tIjoiNGE5MjdmMWQifQ.E_I04Q5EGuMiifSZVDscWXkxBFTcDCQvmf069j4Gfjs
+
+
+
++ Response 200 (application/json)
+
+        {
+          "create_time": "Sat, 27 May 2017 11:34:44 GMT",
+          "details": [
+            {
+              "datetime": "Sat, 27 May 2017 14:54:58 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u6dc4\u535a\u9ad8\u65b0\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u6dc4\u535a\u5e02\u5f20\u5e97\u533a\u660c\u56fd\u8def\u8425\u4e1a\u70b9\u3011"
+            },
+            {
+              "datetime": "Sat, 27 May 2017 13:50:47 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u6dc4\u535a\u9ad8\u65b0\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Sat, 27 May 2017 11:14:14 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u6d4e\u5357\u5386\u57ce\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u6dc4\u535a\u9ad8\u65b0\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Sat, 27 May 2017 09:00:20 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u6d4e\u5357\u5386\u57ce\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Fri, 26 May 2017 02:20:03 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u4e1c\u839e\u6c99\u7530\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u6d4e\u5357\u5386\u57ce\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Fri, 26 May 2017 01:59:06 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u4e1c\u839e\u6c99\u7530\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 22:48:44 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u60e0\u5dde\u9648\u6c5f\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u4e1c\u839e\u6c99\u7530\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 22:40:15 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u60e0\u5dde\u9648\u6c5f\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 21:03:43 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u60e0\u5dde\u5e02\u60e0\u9633\u533a\u5858\u89d2\u6751\u901f\u8fd0\u91cd\u8d27\u8425\u4e1a\u90e8\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u60e0\u5dde\u9648\u6c5f\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 21:03:33 GMT",
+              "status": "\u987a\u4e30\u901f\u8fd0 \u5df2\u6536\u53d6\u5feb\u4ef6"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 20:24:29 GMT",
+              "status": "\u60a8\u7684\u8ba2\u5355\u5df1\u51fa\u5e93"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 20:24:02 GMT",
+              "status": "\u60a8\u7684\u8ba2\u5355\u5df2\u7ecf\u6253\u5305\u5b8c\u6bd5,\u51c6\u5907\u51fa\u5e93."
+            },
+            {
+              "datetime": "Thu, 25 May 2017 15:36:07 GMT",
+              "status": "\u60a8\u7684\u8ba2\u5355\u6b63\u51c6\u5907\u62e3\u8d27"
+            }
+          ],
+          "express": {
+            "code": "SFEXPRESS",
+            "name": "\u987a\u4e30",
+            "tel": "95338"
+          },
+          "nicename": "\u5c0f\u7403\u7684\u793c\u7269",
+          "number": "289031214972",
+          "package_id": "60f63000-bcf5-4f16-9cdd-23141ba5aa5c",
+          "status": 1,
+          "update_time": "Sat, 27 May 2017 14:54:58 GMT",
+          "user_id": "c7b64536-b5d8-49c1-a3a9-ce61ce61f54a"
+        }
+
+
+
+</pre>
+                    <h4>获得所有关注</h4>
+                    <pre># GET /api/watching
+
++ Request
+
+    + Headers
+
+            token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYzdiNjQ1MzYtYjVkOC00OWMxLWEzYTktY2U2MWNlNjFmNTRhIiwicmFuZG9tIjoiNGE5MjdmMWQifQ.E_I04Q5EGuMiifSZVDscWXkxBFTcDCQvmf069j4Gfjs
+
+
+
++ Response 200 (application/json)
+
+        [
+          {
+            "create_time": "Sat, 27 May 2017 11:34:44 GMT",
+            "express": {
+              "code": "SFEXPRESS",
+              "name": "\u987a\u4e30",
+              "tel": "95338"
+            },
+            "nicename": "\u5c0f\u7403\u7684\u793c\u7269",
+            "number": "289031214972",
+            "package_id": "60f63000-bcf5-4f16-9cdd-23141ba5aa5c",
+            "status": 1,
+            "update_time": "Sat, 27 May 2017 14:54:58 GMT",
+            "user_id": "c7b64536-b5d8-49c1-a3a9-ce61ce61f54a"
+          }
+        ]
+
+
+
+</pre>
+                    <h4>根据 快递ID 获得快递信息</h4>
+                    <pre># GET /api/package/60f63000-bcf5-4f16-9cdd-23141ba5aa5c
+
++ Request
+
+    + Headers
+
+            token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYzdiNjQ1MzYtYjVkOC00OWMxLWEzYTktY2U2MWNlNjFmNTRhIiwicmFuZG9tIjoiNGE5MjdmMWQifQ.E_I04Q5EGuMiifSZVDscWXkxBFTcDCQvmf069j4Gfjs
+
+
+
++ Response 200 (application/json)
+
+        {
+          "create_time": "Sat, 27 May 2017 11:34:44 GMT",
+          "details": [
+            {
+              "datetime": "Sat, 27 May 2017 14:54:58 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u6dc4\u535a\u9ad8\u65b0\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u6dc4\u535a\u5e02\u5f20\u5e97\u533a\u660c\u56fd\u8def\u8425\u4e1a\u70b9\u3011"
+            },
+            {
+              "datetime": "Sat, 27 May 2017 13:50:47 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u6dc4\u535a\u9ad8\u65b0\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Sat, 27 May 2017 11:14:14 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u6d4e\u5357\u5386\u57ce\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u6dc4\u535a\u9ad8\u65b0\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Sat, 27 May 2017 09:00:20 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u6d4e\u5357\u5386\u57ce\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Fri, 26 May 2017 02:20:03 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u4e1c\u839e\u6c99\u7530\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u6d4e\u5357\u5386\u57ce\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Fri, 26 May 2017 01:59:06 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u4e1c\u839e\u6c99\u7530\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 22:48:44 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u60e0\u5dde\u9648\u6c5f\u96c6\u6563\u4e2d\u5fc3\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u4e1c\u839e\u6c99\u7530\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 22:40:15 GMT",
+              "status": "\u5feb\u4ef6\u5230\u8fbe \u3010\u60e0\u5dde\u9648\u6c5f\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 21:03:43 GMT",
+              "status": "\u5feb\u4ef6\u5728\u3010\u60e0\u5dde\u5e02\u60e0\u9633\u533a\u5858\u89d2\u6751\u901f\u8fd0\u91cd\u8d27\u8425\u4e1a\u90e8\u3011\u5df2\u88c5\u8f66\uff0c\u51c6\u5907\u53d1\u5f80 \u3010\u60e0\u5dde\u9648\u6c5f\u96c6\u6563\u4e2d\u5fc3\u3011"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 21:03:33 GMT",
+              "status": "\u987a\u4e30\u901f\u8fd0 \u5df2\u6536\u53d6\u5feb\u4ef6"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 20:24:29 GMT",
+              "status": "\u60a8\u7684\u8ba2\u5355\u5df1\u51fa\u5e93"
+            },
+            {
+              "datetime": "Thu, 25 May 2017 20:24:02 GMT",
+              "status": "\u60a8\u7684\u8ba2\u5355\u5df2\u7ecf\u6253\u5305\u5b8c\u6bd5,\u51c6\u5907\u51fa\u5e93."
+            },
+            {
+              "datetime": "Thu, 25 May 2017 15:36:07 GMT",
+              "status": "\u60a8\u7684\u8ba2\u5355\u6b63\u51c6\u5907\u62e3\u8d27"
+            }
+          ],
+          "express": {
+            "code": "SFEXPRESS",
+            "name": "\u987a\u4e30",
+            "tel": "95338"
+          },
+          "nicename": "\u5c0f\u7403\u7684\u793c\u7269",
+          "number": "289031214972",
+          "package_id": "60f63000-bcf5-4f16-9cdd-23141ba5aa5c",
+          "status": 1,
+          "update_time": "Sat, 27 May 2017 14:54:58 GMT",
+          "user_id": "c7b64536-b5d8-49c1-a3a9-ce61ce61f54a"
+        }
+
+
+
+</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

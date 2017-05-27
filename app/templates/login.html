@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}用户登录 | 剁手后续记{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1" style="padding-top: 5%">
+            <h2>用户登录</h2>
+            {% if form.errors %}
+            <div class="row">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    {% for error_name in form.errors %}
+                    {% for error in form.errors[error_name] %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <form method="POST" action="{{ url_for('view.login') }}">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.username.label() }}
+                    {{ form.username(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label() }}
+                    {{ form.password(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.remember() }}
+                    {{ form.remember.label() }}
+                </div>
+                <button type="submit" class="btn btn-default">登录</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

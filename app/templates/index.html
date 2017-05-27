@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}剁手后续记{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-10 col-md-offset-1" style="padding-top: 15%">
+        <form method="POST" action="{{ url_for('view.index') }}">
+            {{ form.csrf_token }}
+            <div class="row">
+                <div class="form-group input-group-lg col-md-3">
+                    {{ form.express_code.label(class_="sr-only") }}
+                    {{ form.express_code(class_="form-control")}}
+                </div>
+                <div class="form-group input-group-lg col-md-8">
+                    {{ form.package_number.label(class_="sr-only") }}
+                    {{ form.package_number(class_="form-control", placeholder="快递单号")}}
+                </div>
+                <div class="form-group col-md-1">
+                    <button type="submit" class="btn btn-info btn-lg">查询</button>
+                </div>
+                <p class="text-right"><small>如果你和我一样有时刻盯着快递的强迫症, 这个工具肯定适合你。</small></p>
+            </div>
+            {% if form.errors %}
+            <div class="row">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    {% for error_name in form.errors %}
+                    {% for error in form.errors[error_name] %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}快递查询 | 剁手后续记{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>快递信息</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>快递 ID</th>
+                        <th>物流公司</th>
+                        <th>物流联系方式</th>
+                        <th>最新状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><abbr title="本平台唯一标识符">{{ package.package_id }}</abbr></td>
+                        <td>{{ express.name }}</td>
+                        <td>{{ express.tel }}</td>
+                        <td>{{ package.status | safe }}</td>
+                        <td>
+                            {% if not package.is_watching %}
+                            <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
+                                    data-target="#watching" data-packageid="{{ package.package_id }}">关注
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                    data-target="#unwatching" data-packageid="{{ package.package_id }}">取消关注
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>快递跟踪信息</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in package.details %}
+                        <tr>
+                            <td>{{ s.datetime }}</td>
+                            <td>{{ s.status }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="watching" tabindex="-1" role="dialog" aria-labelledby="wathingLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ url_for('view.package_info', package_id=package.package_id) }}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="wathingLabel">关注当前快递</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ watch_form.csrf_token }}
+                        {{ watch_form.watch_package_id(id="watching_package_id") }}
+                        <p>
+                            给这个包裹起一个容易识别昵称?
+                        </p>
+                        <div class="form-group">
+                            {{ watch_form.watch_nicename.label() }}
+                            {{ watch_form.watch_nicename(class_="form-control", placeholder="作为备注使用") }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">关注</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="unwatching" tabindex="-1" role="dialog" aria-labelledby="unwathingLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ url_for('view.package_info', package_id=package.package_id) }}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="unwathingLabel">取消关注</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ unwatch_form.csrf_token }}
+                        {{ unwatch_form.unwatch_package_id(id="unwatching_package_id") }}
+                        <p>
+                            您要取消关注这个快递吗?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-danger">取消关注</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="application/javascript">
+        $('#watching').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var packge_id = button.data('packageid');
+            var modal = $(this);
+            modal.find('#watching_package_id').val(packge_id);
+        })
+        $('#unwatching').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var packge_id = button.data('packageid');
+            var modal = $(this);
+            modal.find('#unwatching_package_id').val(packge_id);
+        })
+    </script>
+{% endblock %}
